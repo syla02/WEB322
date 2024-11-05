@@ -22,6 +22,7 @@ const app = express();
 const HTTP_PORT = process.env.PORT || 8060;
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
