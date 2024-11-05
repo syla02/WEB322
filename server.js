@@ -3,7 +3,7 @@ const path = require("path");
 const projectData = require("./modules/projects");
 
 const app = express();
-const HTTP_PORT = process.env.PORT || 8050;
+const HTTP_PORT = process.env.PORT || 8080;
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
