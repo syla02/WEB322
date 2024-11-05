@@ -1,3 +1,19 @@
+/********************************************************************************
+* WEB322 – Assignment 04
+*
+* I declare that this assignment is my own work in accordance with Seneca's
+* Academic Integrity Policy:
+*
+* https://www.senecapolytechnic.ca/about/policies/academic-integrity-policy.html
+*
+* Name: Shwe Yee Lin Aung Student ID: 100018233 Date: 4 Oct 2024
+*
+* Published URL: // I got the URL working for A3 but it is not working now I
+*                  sent it to your teams, with my public repository
+*
+********************************************************************************/
+
+
 const express = require('express');
 const path = require("path");
 const projectData = require("./modules/projects");
