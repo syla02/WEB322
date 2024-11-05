@@ -1,54 +1,52 @@
-const projectData = require("./modules/projects");
-const path = require("path");
-
 const express = require('express');
+const path = require("path");
+const projectData = require("./modules/projects");
+
 const app = express();
+const HTTP_PORT = process.env.PORT || 8050;
 
-const HTTP_PORT = process.env.PORT || 8080;
-
-app.use(express.static(__dirname + '/public'));
-app.set('views', __dirname + '/views');
-
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, "/views/home.html"));
+  res.render("home");
 });
 
 app.get('/about', (req, res) => {
-  res.sendFile(path.join(__dirname, "/views/about.html"));
+  res.render("about");
 });
 
-app.get("/solutions/projects", async (req,res)=>{
-
-  try{
-    if(req.query.sector){
-      let projects = await projectData.getProjectsBySector(req.query.sector);
-      res.send(projects);
-  
-    }else{
-      let projects = await projectData.getAllProjects();
-      res.send(projects);
+app.get("/solutions/projects/:id?", async (req, res) => {
+  try {
+    if (req.params.id) {
+      let project = await projectData.getProjectById(req.params.id);
+      res.render("project", { project: project, isProjectPage: true });
+    } else {
+     
+      let projects;
+      if (req.query.sector) {
+        projects = await projectData.getProjectsBySector(req.query.sector);
+        if (projects.length === 0) {
+          return res.status(404).render("404", { message: "No projects found for the specified sector." });
+        }
+      } else {
+        projects = await projectData.getAllProjects();
+      }
+      res.render("project", { projects: projects, isProjectPage: false });
     }
-  }catch(err){
-    res.status(404).send(err);
-  }
-
-});
-
-app.get("/solutions/projects/:id", async (req,res)=>{
-  try{
-    let project = await projectData.getProjectById(req.params.id);
-    res.send(project);
-  }catch(err){
-    res.status(404).send(err);
+  } catch (err) {
+    res.status(404).render("404", { message: "Unable to retrieve projects." });
   }
 });
 
-app.use((req, res, next) => {
-  res.status(404).sendFile(path.join(__dirname, "/views/404.html"));
+
+app.use((req, res) => {
+  res.status(404).render("404", { message: "I'm sorry, we're unable to find what you're looking for." });
 });
 
 
-projectData.initialize().then(()=>{
-  app.listen(HTTP_PORT, () => { console.log(`server listening on: ${HTTP_PORT}`) });
+projectData.initialize().then(() => {
+  app.listen(HTTP_PORT, () => {
+    console.log(`Server listening on: ${HTTP_PORT}`);
+  });
 });
