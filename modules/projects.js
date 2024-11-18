@@ -1,6 +1,8 @@
 const projectData = require("../data/projectData");
 const sectorData = require("../data/sectorData");
-
+require('dotenv').config();
+require('pg'); 
+const Sequelize = require('sequelize'); 
 let projects = [];
 
 function initialize() {
